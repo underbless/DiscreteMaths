@@ -1,0 +1,86 @@
+<html>
+<body>
+
+Depth: <input type="text" id="depth" value="">
+<button onclick="doDraw()">Draw</button>
+<button onclick="doClear()">Clear</button>
+<br>
+<canvas id="canvas" width="1000" height="1000"></canvas>
+
+<script type="text/javascript">
+var elem = document.getElementById('canvas');
+var context = elem.getContext('2d');
+context.fillStyle = '#000';
+context.lineWidth = 1;
+// var depth = 1;
+// var x1 = 30;
+// var y1 = 30;
+// var x2 = 200;
+// var y2 = 30;
+
+
+function drawOneKochLine(x1, y1, x2, y2, kind){
+  var Ax = (x2 + 2*x1) / 3;
+  var Ay = (y2 + 2*y1) / 3;
+  var Bx = (2*x2 + x1) / 3;
+  var By = (2*y2 + y1) / 3;
+  if(kind == 1) {
+    var Cx = (x1 + x2 - Math.sqrt(0.3)*(y2 - y1)) / 2;
+    var Cy = (y1 + y2 + Math.sqrt(0.3)*(x2 - x1)) / 2;
+  } else {
+    var Cx = (x1 + x2 + Math.sqrt(0.3)*(y2 - y1)) / 2;
+    var Cy = (y1 + y2 - Math.sqrt(0.3)*(x2 - x1)) / 2;
+  }
+
+  context.moveTo(x1, y1);      
+  context.lineTo(Ax, Ay);
+  context.moveTo(Ax, Ay);     
+  context.lineTo(Cx, Cy);
+  context.moveTo(Cx, Cy);      
+  context.lineTo(Bx, By);
+  context.moveTo(Bx, By);      
+  context.lineTo(x2, y2);
+
+}
+
+
+function drawKochSnowflake(x1, y1, x2, y2, depth, kind){
+  var Ax = (x2 + 2*x1) / 3;
+  var Ay = (y2 + 2*y1) / 3;
+  var Bx = (2*x2 + x1) / 3;
+  var By = (2*y2 + y1) / 3;
+  if(kind == 1) {
+    var Cx = (x1 + x2 - Math.sqrt(0.3)*(y2 - y1)) / 2;
+    var Cy = (y1 + y2 + Math.sqrt(0.3)*(x2 - x1)) / 2;
+  } else {
+    var Cx = (x1 + x2 + Math.sqrt(0.3)*(y2 - y1)) / 2;
+    var Cy = (y1 + y2 - Math.sqrt(0.3)*(x2 - x1)) / 2;
+  }
+
+  if (depth == 1){
+    drawOneKochLine(x1, y1, x2, y2, kind);
+
+  } else {
+    drawKochSnowflake(x1, y1, Ax, Ay, depth - 1, kind);
+    drawKochSnowflake(Ax, Ay, Cx, Cy, depth - 1, kind);
+    drawKochSnowflake(Cx, Cy, Bx, By, depth - 1, kind);
+    drawKochSnowflake(Bx, By, x2, y2, depth - 1, kind);
+  }
+}
+
+function doDraw(){
+  var depth = parseInt(document.getElementById("depth").value) ;
+  context.beginPath();
+  drawKochSnowflake(100, 300, 300, 300, depth, 1);
+  drawKochSnowflake(100, 300, 200, 300 - Math.sqrt(3)*100, depth, 2);
+  drawKochSnowflake(200, 300 - Math.sqrt(3)*100, 300, 300, depth, 2);
+  context.closePath();
+  context.stroke();
+}
+function doClear() {
+  context.clearRect(0, 0, canvas.width, canvas.height) ;
+}
+</script>
+
+</body>
+</html>

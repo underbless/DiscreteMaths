@@ -1,0 +1,76 @@
+<html>
+<body>
+
+<input type="text" id="depth" value="">
+<button onclick="doDraw()">Draw</button>
+<button onclick="doClear()">Clear</button>
+<br>
+<canvas id="canvas" width="700" height="700"></canvas>
+
+<script type="text/javascript">
+var elem = document.getElementById('canvas');
+var context = elem.getContext('2d');
+
+//Declare variables
+var root=Math.sqrt(3);
+context.fillStyle = '#000';
+context.lineWidth = 1;
+
+
+
+function drawTriangle(x1,y1,depth,length){
+
+  if(depth == 0){
+    //Make triangle
+    context.moveTo(300,0);
+    context.lineTo(600,600*root/2);
+    context.moveTo(300,0);
+    context.lineTo(0,600*root/2);
+    context.moveTo(0,600*root/2);
+    context.lineTo(600,600*root/2);
+    context.stroke();
+
+  }else if(depth !== 0){
+    drawLine(x1,y1,length);
+
+    drawTriangle(x1+length/4,y1-length*root/4,depth-1,length/2);
+    drawTriangle(x1-length/4,y1+length*root/4,depth-1,length/2);
+    drawTriangle(x1+length*(3/4),y1+length*root/4,depth-1,length/2);
+  }
+
+}
+
+function drawLine(x1,y1,length){
+  context.moveTo(x1,y1);
+  context.lineTo(x1+length,y1);
+  context.moveTo(x1,y1);
+  context.lineTo((x1+x1+length)/2,y1+(length)*root/2);
+  context.moveTo(x1+length,y1);
+  context.lineTo((x1+x1+length)/2,y1+(length)*root/2);
+  context.stroke();
+
+}
+
+
+
+
+function doDraw(){
+ var depth = parseInt(document.getElementById("depth").value);
+
+ context.beginPath();
+
+
+ drawTriangle(600*(1/4),(600*root/2)/2,depth,300);
+ context.closePath();
+ context.stroke();
+}
+
+
+function doClear() {
+  context.clearRect(0, 0, canvas.width, canvas.height) ;
+}
+
+</script>
+
+</body>
+</html>
